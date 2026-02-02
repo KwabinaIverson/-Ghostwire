@@ -42,7 +42,6 @@ export async function fetchGroupMessages(groupId) {
         if (!res.ok) return [];
         const data = await res.json();
         // assuming the API returns { messages: [...] }
-        console.log("RAW MESSAGES FROM API:", data);
         return data.messages || [];
     } catch (err) {
         console.error('Failed to fetch messages for group', err);
