@@ -1,40 +1,29 @@
-import { v4 as uuidv7 } from 'uuid';
+import { v4 as uuidv7 } from "uuid";
 
-/**
- * BaseEntity is an abstract class that provides common properties and logic
- * for all entities in the application. It ensures each entity has a unique ID,
- * as well as timestamps for creation and last update.
- *
- * Properties:
- * - id: A unique identifier generated using uuidv7.
- * - createdAt: The date and time when the entity was created.
- * - updatedAt: The date and time when the entity was last updated.
- *
- * Usage:
- * Extend this class in your domain models to inherit these properties.
- *
- * Example:
- *   class User extends BaseEntity { ... }
- */
 export abstract class BaseEntity {
-  /**
-   * A unique identifier for the entity, generated using uuidv7.
-   */
-  protected id: string;
-
-  /**
-   * The date and time when the entity was created.
-   */
-  protected createdAt: Date;
-
-  /**
-   * The date and time when the entity was last updated.
-   */
-  protected updatedAt: Date;
+  protected _id: string;
+  protected _createdAt: Date;
+  protected _updatedAt: Date;
 
   constructor() {
-    this.id = uuidv7();
-    this.createdAt = new Date();
-    this.updatedAt = new Date();
+    this._id = uuidv7();
+    this._createdAt = new Date();
+    this._updatedAt = new Date();
+  }
+
+  public get id(): string {
+    return this._id;
+  }
+
+  public get createdAt(): Date {
+    return this._createdAt;
+  }
+
+  public get updatedAt(): Date {
+    return this._updatedAt;
+  }
+
+  protected touch(): void {
+    this._updatedAt = new Date();
   }
 }

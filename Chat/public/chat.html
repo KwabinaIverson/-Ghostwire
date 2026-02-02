@@ -6,17 +6,13 @@
     <title>GhostWire | Chat</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="css/style.css">
-    <!-- Ionicons for icons -->
     <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>👻</text></svg>">
 </head>
 <body class="bg-[#202225] text-gray-100 font-sans antialiased h-screen overflow-hidden flex">
 
-    <!-- SIDEBAR (Server List / Groups) -->
-    <!-- Hidden on Mobile, Fixed on Desktop -->
     <aside id="sidebar" class="bg-[#2f3136] w-72 flex-shrink-0 flex flex-col border-r border-[#202225] absolute md:relative z-20 h-full transform -translate-x-full md:translate-x-0 transition-transform duration-300">
         
-        <!-- Header -->
         <div class="h-12 shadow-sm flex items-center px-4 border-b border-[#202225] bg-[#2f3136]">
             <h1 class="font-bold text-white tracking-wide">👻 GhostWire</h1>
             <div class="ml-auto flex items-center gap-2">
@@ -40,17 +36,9 @@
           </div>
         </div>
 
-        <!-- Groups List -->
         <div class="flex-1 overflow-y-auto p-3 space-y-2" id="groupList">
-            <!-- Group Item Example -->
-            <div class="group-item bg-[#36393f] p-2 rounded cursor-pointer hover:bg-[#40444b] hover:text-white text-gray-400 font-medium flex items-center gap-3">
-                <span class="text-xl">#</span>
-                <span>general</span>
             </div>
-            <!-- Dynamic Content goes here -->
-        </div>
 
-        <!-- User Profile (Bottom) -->
         <div class="bg-[#292b2f] p-2 flex items-center gap-3">
             <div class="w-8 h-8 rounded-full bg-[#5865F2] flex items-center justify-center text-white font-bold" id="userAvatar">
                 ?
@@ -61,7 +49,6 @@
                     <div class="text-xs font-bold text-white truncate" id="userName">Loading...</div>
                     <div id="connStatusText" class="ml-2 text-[10px] text-gray-400">Connecting...</div>
                 </div>
-
             </div>
             <button id="logoutBtn" class="text-gray-400 hover:text-red-400">
                 <ion-icon name="log-out-outline" size="small"></ion-icon>
@@ -70,8 +57,7 @@
                 <ion-icon name="create-outline" size="small"></ion-icon>
             </button>
 
-            <!-- Profile Editor (hidden by default) -->
-            <div id="profileEditor" class="hidden p-3 bg-[#232329] rounded shadow-md absolute bottom-16 left-4 w-64 z-50">
+            <div id="profileEditor" class="hidden p-3 bg-[#232329] rounded shadow-md absolute bottom-16 left-4 w-64 z-50 border border-gray-700">
                 <div class="mb-2 text-sm text-gray-200 font-bold">Edit Profile</div>
                 <label class="text-xs text-gray-400">Avatar URL</label>
                 <input id="avatarUrlInput" type="text" class="w-full bg-[#202225] p-2 rounded mt-1 text-sm text-white" placeholder="https://...">
@@ -81,39 +67,18 @@
                 </div>
                 <div id="avatarPreview" class="mt-2 w-16 h-16 rounded-full overflow-hidden bg-[#1f1f1f] flex items-center justify-center text-white font-bold"></div>
                 <label class="text-xs text-gray-400 mt-2">Color</label>
-                <input id="colorInput" type="color" class="w-full h-10 mt-1 rounded">
+                <input id="colorInput" type="color" class="w-full h-10 mt-1 rounded border-none bg-transparent">
                 <div class="mt-3 flex gap-2 justify-end">
-                  <button id="cancelProfileBtn" class="px-3 py-1 bg-[#2f3136] rounded text-sm">Cancel</button>
-                  <button id="saveProfileBtn" class="px-3 py-1 bg-[#5865F2] text-white rounded text-sm">Save</button>
+                  <button id="cancelProfileBtn" class="px-3 py-1 bg-[#2f3136] rounded text-sm hover:bg-[#40444b]">Cancel</button>
+                  <button id="saveProfileBtn" class="px-3 py-1 bg-[#5865F2] text-white rounded text-sm hover:bg-[#4752c4]">Save</button>
                 </div>
             </div>
         </div>
     </aside>
 
-    <!-- MAIN CHAT AREA -->
     <main class="flex-1 flex flex-col bg-[#36393f] relative min-w-0">
 
-        <!-- Create Group Modal -->
-        <div id="createGroupModal" class="fixed inset-0 bg-black/50 z-40 hidden items-center justify-center">
-            <div class="bg-[#232329] rounded p-4 w-96">
-                <h3 class="font-bold text-white mb-2">Create Group</h3>
-                <label class="text-xs text-gray-400">Group Name</label>
-                <input id="groupNameInput" type="text" class="w-full bg-[#202225] p-2 rounded mt-1 text-sm text-white" placeholder="e.g. Project Alpha">
-                <label class="text-xs text-gray-400 mt-2">Description (optional)</label>
-                <textarea id="groupDescriptionInput" rows="3" class="w-full bg-[#202225] p-2 rounded mt-1 text-sm text-white" placeholder="Add a brief description (max 200 chars)"></textarea>
-                <label class="text-xs text-gray-400 mt-2">Members</label>
-                <input id="groupMembersSearch" type="text" class="w-full bg-[#202225] p-2 rounded mt-1 text-sm text-white" placeholder="Search by name or email">
-                <div id="groupMembersSuggestions" class="mt-2 bg-[#1f1f1f] rounded max-h-40 overflow-auto hidden text-sm"></div>
-                <div id="groupMembersSelected" class="mt-2 flex gap-2 flex-wrap"></div>
-                <p id="groupLimitMsg" class="text-xs text-red-400 mt-2 hidden">You have reached the maximum of 5 groups and cannot create more.</p>
-                <div class="mt-3 flex gap-2 justify-end">
-                  <button id="cancelCreateGroupBtn" class="px-3 py-1 bg-[#2f3136] rounded text-sm">Cancel</button>
-                  <button id="createGroupBtnConfirm" class="px-3 py-1 bg-[#5865F2] text-white rounded text-sm">Create</button>
-                </div>
-            </div>
-        </div>
         <header class="h-12 flex items-center px-4 shadow-sm border-b border-[#26272d] flex-shrink-0">
-            <!-- Hamburger Menu (Mobile) -->
             <button id="openSidebar" class="md:hidden mr-4 text-gray-400">
                 <ion-icon name="menu-outline" size="large"></ion-icon>
             </button>
@@ -121,36 +86,18 @@
                 <span class="text-gray-400 text-xl">#</span>
                 <span id="currentRoomName">Select a group</span>
             </div>
-            <button id="addMemberBtn" title="Add Members" class="ml-auto hidden text-gray-400 hover:text-[#5865F2] transition-colors">
-              <ion-icon name="person-add-outline" size="large"></ion-icon>
+            <button id="addMemberBtn" title="Add Members" class="ml-auto hidden text-gray-400 hover:text-[#5865F2]">
+                <ion-icon name="person-add-outline" size="large"></ion-icon>
             </button>
         </header>
 
-        <!-- Messages Area -->
         <div id="messagesContainer" class="flex-1 overflow-y-auto p-4 space-y-4 scroll-smooth">
-            
-            <!-- Welcome Placeholder -->
-            <div class="flex flex-col items-center justify-center h-full text-gray-500">
+            <div id="welcomePlaceholder" class="flex flex-col items-center justify-center h-full text-gray-500">
                 <ion-icon name="chatbubbles-outline" class="text-6xl mb-4"></ion-icon>
                 <p>Join a group to start chatting.</p>
             </div>
-
-            <!-- Message Template (Hidden) -->
-            <!-- 
-            <div class="flex gap-4 hover:bg-[#32353b] p-1 -mx-2 px-2 rounded group">
-                <div class="w-10 h-10 rounded-full bg-gray-600 flex-shrink-0"></div>
-                <div>
-                    <div class="flex items-baseline gap-2">
-                        <span class="font-bold text-white cursor-pointer hover:underline">Username</span>
-                        <span class="text-xs text-gray-500">Today at 10:30 AM</span>
-                    </div>
-                    <p class="text-gray-300">Hello world!</p>
-                </div>
-            </div> 
-            -->
         </div>
 
-        <!-- Input Area -->
         <div class="p-4 flex-shrink-0">
             <div class="bg-[#40444b] rounded-lg p-2.5 flex items-center gap-3">
                 <button class="text-gray-400 hover:text-gray-200">
@@ -158,7 +105,7 @@
                 </button>
                 <input type="text" id="messageInput" 
                     class="bg-transparent flex-1 outline-none text-white placeholder-gray-500"
-                    placeholder="Message #general" disabled>
+                    placeholder="Message #" disabled>
                 <button class="text-[#5865F2] hover:text-white transition-colors" id="sendBtn" disabled>
                     <ion-icon name="send" size="small"></ion-icon>
                 </button>
@@ -167,12 +114,49 @@
 
     </main>
 
-    <!-- Mobile Overlay -->
+    <div id="createGroupModal" class="hidden fixed inset-0 bg-black/70 flex items-center justify-center z-50">
+        <div class="bg-[#2f3136] p-6 rounded w-[90%] max-w-md flex flex-col gap-3 shadow-2xl border border-gray-700">
+            <div class="flex justify-between items-center">
+                <h3 class="text-lg font-bold text-white">Create Group</h3>
+                <button id="closeCreateGroupModal" class="text-gray-400 hover:text-white text-2xl">&times;</button>
+            </div>
+            <input id="groupNameInput" type="text" placeholder="Group name" class="w-full p-2 rounded bg-[#40444b] text-white outline-none focus:ring-1 focus:ring-indigo-500" />
+            <textarea id="groupDescInput" placeholder="Description (optional)" class="w-full p-2 rounded bg-[#40444b] text-white outline-none focus:ring-1 focus:ring-indigo-500 h-24 resize-none"></textarea>
+            <button id="confirmCreateGroupBtn" class="bg-indigo-600 hover:bg-indigo-700 text-white py-2 rounded mt-2 font-medium transition-colors">
+                Create Group
+            </button>
+        </div>
+    </div>
+
+        <div id="addMembersModal" class="hidden fixed inset-0 bg-black/70 flex items-center justify-center z-50">
+        <div class="bg-[#2f3136] p-6 rounded w-[90%] max-w-md flex flex-col gap-3 shadow-2xl border border-gray-700">
+            
+            <div class="flex justify-between items-center">
+                <h3 class="text-lg font-bold text-white">Add Members</h3>
+                <button id="closeAddMembersModal" class="text-gray-400 hover:text-white text-2xl">&times;</button>
+            </div>
+
+            <input id="groupMembersInput" type="text" placeholder="Search users by username or email..." 
+                class="w-full p-2 rounded bg-[#40444b] text-white outline-none focus:ring-1 focus:ring-blue-500" />
+
+            <div id="groupMembersSelected" class="flex flex-col mt-2 max-h-64 overflow-y-auto space-y-2">
+                <div id="selectedUsersList" class="flex flex-wrap gap-2 mb-2"></div>
+                
+                <div id="searchResultsList" class="space-y-1 border-t border-gray-600 pt-2 hidden"></div>
+            </div>
+
+            <button id="confirmAddMembersBtn" class="bg-blue-600 hover:bg-blue-700 text-white py-2 rounded mt-2 font-medium transition-colors">
+                Add Members
+            </button>
+            
+        </div>
+    </div>
+
     <div id="overlay" class="fixed inset-0 bg-black/50 z-10 hidden md:hidden"></div>
 
     <script src="js/alert.js"></script>
     <script src="https://cdn.socket.io/4.7.4/socket.io.min.js"></script>
-    <script src="js/chat.js"></script>
+    <script type="module" src="js/chat.js"></script>
     <script src="js/auth.js"></script>
 </body>
 </html>

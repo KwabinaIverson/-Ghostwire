@@ -9,6 +9,7 @@ router.post('/', authenticate, GroupController.create);
 router.get('/', authenticate, GroupController.listMyGroups);
 
 // Add members to a group by emails or userIds
-router.post('/:id/members', authenticate, GroupController.addMembers);
+router.post('/:id/add-members', authenticate, GroupController.addMembers);
+router.get('/:groupId/messages', authenticate, GroupController.getMessages);
 
 export default router;
